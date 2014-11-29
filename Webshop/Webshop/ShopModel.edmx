@@ -1,0 +1,288 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="shopModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CATEGORY">
+          <Key>
+            <PropertyRef Name="category_name" />
+          </Key>
+          <Property Name="category_name" Type="varchar" MaxLength="150" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ITEM">
+          <Key>
+            <PropertyRef Name="item_id" />
+          </Key>
+          <Property Name="item_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="item_name" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="item_description" Type="varchar(max)" Nullable="false" />
+          <Property Name="item_price" Type="float" Nullable="false" />
+          <Property Name="category" Type="varchar" MaxLength="150" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'shop.dbo.ORDERITEM' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="ORDERITEM">
+          <Key>
+            <PropertyRef Name="order_id" />
+            <PropertyRef Name="item_id" />
+          </Key>
+          <Property Name="order_id" Type="int" Nullable="false" />
+          <Property Name="item_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="USERORDER">
+          <Key>
+            <PropertyRef Name="order_id" />
+          </Key>
+          <Property Name="usr_id" Type="int" Nullable="false" />
+          <Property Name="order_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="USERS">
+          <Key>
+            <PropertyRef Name="usr_id" />
+          </Key>
+          <Property Name="usr_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="usr_name" Type="varchar" MaxLength="150" />
+          <Property Name="usr_password" Type="varchar" MaxLength="150" />
+          <Property Name="usr_mail" Type="varchar" MaxLength="250" />
+        </EntityType>
+        <Association Name="FK__ITEM__category__08EA5793">
+          <End Role="CATEGORY" Type="Self.CATEGORY" Multiplicity="1" />
+          <End Role="ITEM" Type="Self.ITEM" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CATEGORY">
+              <PropertyRef Name="category_name" />
+            </Principal>
+            <Dependent Role="ITEM">
+              <PropertyRef Name="category" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ORDERITEM__item___15502E78">
+          <End Role="ITEM" Type="Self.ITEM" Multiplicity="1" />
+          <End Role="ORDERITEM" Type="Self.ORDERITEM" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ITEM">
+              <PropertyRef Name="item_id" />
+            </Principal>
+            <Dependent Role="ORDERITEM">
+              <PropertyRef Name="item_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ORDERITEM__order__145C0A3F">
+          <End Role="USERORDER" Type="Self.USERORDER" Multiplicity="1" />
+          <End Role="ORDERITEM" Type="Self.ORDERITEM" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USERORDER">
+              <PropertyRef Name="order_id" />
+            </Principal>
+            <Dependent Role="ORDERITEM">
+              <PropertyRef Name="order_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__USERORDER__usr_i__1273C1CD">
+          <End Role="USERS" Type="Self.USERS" Multiplicity="1" />
+          <End Role="USERORDER" Type="Self.USERORDER" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USERS">
+              <PropertyRef Name="usr_id" />
+            </Principal>
+            <Dependent Role="USERORDER">
+              <PropertyRef Name="usr_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="shopModelStoreContainer">
+          <EntitySet Name="CATEGORY" EntityType="Self.CATEGORY" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ITEM" EntityType="Self.ITEM" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="USERORDER" EntityType="Self.USERORDER" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="USERS" EntityType="Self.USERS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ORDERITEM" EntityType="Self.ORDERITEM" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [ORDERITEM].[order_id] AS [order_id], 
+    [ORDERITEM].[item_id] AS [item_id]
+    FROM [dbo].[ORDERITEM] AS [ORDERITEM]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK__ITEM__category__08EA5793" Association="Self.FK__ITEM__category__08EA5793">
+            <End Role="CATEGORY" EntitySet="CATEGORY" />
+            <End Role="ITEM" EntitySet="ITEM" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ORDERITEM__item___15502E78" Association="Self.FK__ORDERITEM__item___15502E78">
+            <End Role="ITEM" EntitySet="ITEM" />
+            <End Role="ORDERITEM" EntitySet="ORDERITEM" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ORDERITEM__order__145C0A3F" Association="Self.FK__ORDERITEM__order__145C0A3F">
+            <End Role="USERORDER" EntitySet="USERORDER" />
+            <End Role="ORDERITEM" EntitySet="ORDERITEM" />
+          </AssociationSet>
+          <AssociationSet Name="FK__USERORDER__usr_i__1273C1CD" Association="Self.FK__USERORDER__usr_i__1273C1CD">
+            <End Role="USERS" EntitySet="USERS" />
+            <End Role="USERORDER" EntitySet="USERORDER" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="shopModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CATEGORY">
+          <Key>
+            <PropertyRef Name="category_name" />
+          </Key>
+          <Property Name="category_name" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="ITEM" Relationship="Self.FK__ITEM__category__08EA5793" FromRole="CATEGORY" ToRole="ITEM" />
+        </EntityType>
+        <EntityType Name="ITEM">
+          <Key>
+            <PropertyRef Name="item_id" />
+          </Key>
+          <Property Name="item_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="item_name" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="item_description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="item_price" Type="Double" Nullable="false" />
+          <Property Name="category" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="CATEGORY1" Relationship="Self.FK__ITEM__category__08EA5793" FromRole="ITEM" ToRole="CATEGORY" />
+          <NavigationProperty Name="USERORDER" Relationship="Self.ORDERITEM" FromRole="ITEM" ToRole="USERORDER" />
+        </EntityType>
+        <EntityType Name="USERORDER">
+          <Key>
+            <PropertyRef Name="order_id" />
+          </Key>
+          <Property Name="usr_id" Type="Int32" Nullable="false" />
+          <Property Name="order_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="USERS" Relationship="Self.FK__USERORDER__usr_i__1273C1CD" FromRole="USERORDER" ToRole="USERS" />
+          <NavigationProperty Name="ITEM" Relationship="Self.ORDERITEM" FromRole="USERORDER" ToRole="ITEM" />
+        </EntityType>
+        <EntityType Name="USERS">
+          <Key>
+            <PropertyRef Name="usr_id" />
+          </Key>
+          <Property Name="usr_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="usr_name" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="usr_password" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="usr_mail" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="USERORDER" Relationship="Self.FK__USERORDER__usr_i__1273C1CD" FromRole="USERS" ToRole="USERORDER" />
+        </EntityType>
+        <Association Name="FK__ITEM__category__08EA5793">
+          <End Role="CATEGORY" Type="Self.CATEGORY" Multiplicity="1" />
+          <End Role="ITEM" Type="Self.ITEM" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CATEGORY">
+              <PropertyRef Name="category_name" />
+            </Principal>
+            <Dependent Role="ITEM">
+              <PropertyRef Name="category" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__USERORDER__usr_i__1273C1CD">
+          <End Role="USERS" Type="Self.USERS" Multiplicity="1" />
+          <End Role="USERORDER" Type="Self.USERORDER" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USERS">
+              <PropertyRef Name="usr_id" />
+            </Principal>
+            <Dependent Role="USERORDER">
+              <PropertyRef Name="usr_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ORDERITEM">
+          <End Role="ITEM" Type="Self.ITEM" Multiplicity="*" />
+          <End Role="USERORDER" Type="Self.USERORDER" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="shopEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CATEGORY" EntityType="Self.CATEGORY" />
+          <EntitySet Name="ITEM" EntityType="Self.ITEM" />
+          <EntitySet Name="USERORDER" EntityType="Self.USERORDER" />
+          <EntitySet Name="USERS" EntityType="Self.USERS" />
+          <AssociationSet Name="FK__ITEM__category__08EA5793" Association="Self.FK__ITEM__category__08EA5793">
+            <End Role="CATEGORY" EntitySet="CATEGORY" />
+            <End Role="ITEM" EntitySet="ITEM" />
+          </AssociationSet>
+          <AssociationSet Name="FK__USERORDER__usr_i__1273C1CD" Association="Self.FK__USERORDER__usr_i__1273C1CD">
+            <End Role="USERS" EntitySet="USERS" />
+            <End Role="USERORDER" EntitySet="USERORDER" />
+          </AssociationSet>
+          <AssociationSet Name="ORDERITEM" Association="Self.ORDERITEM">
+            <End Role="ITEM" EntitySet="ITEM" />
+            <End Role="USERORDER" EntitySet="USERORDER" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="shopModelStoreContainer" CdmEntityContainer="shopEntities">
+          <EntitySetMapping Name="CATEGORY">
+            <EntityTypeMapping TypeName="shopModel.CATEGORY">
+              <MappingFragment StoreEntitySet="CATEGORY">
+                <ScalarProperty Name="category_name" ColumnName="category_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ITEM">
+            <EntityTypeMapping TypeName="shopModel.ITEM">
+              <MappingFragment StoreEntitySet="ITEM">
+                <ScalarProperty Name="item_id" ColumnName="item_id" />
+                <ScalarProperty Name="item_name" ColumnName="item_name" />
+                <ScalarProperty Name="item_description" ColumnName="item_description" />
+                <ScalarProperty Name="item_price" ColumnName="item_price" />
+                <ScalarProperty Name="category" ColumnName="category" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="USERORDER">
+            <EntityTypeMapping TypeName="shopModel.USERORDER">
+              <MappingFragment StoreEntitySet="USERORDER">
+                <ScalarProperty Name="usr_id" ColumnName="usr_id" />
+                <ScalarProperty Name="order_id" ColumnName="order_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="USERS">
+            <EntityTypeMapping TypeName="shopModel.USERS">
+              <MappingFragment StoreEntitySet="USERS">
+                <ScalarProperty Name="usr_id" ColumnName="usr_id" />
+                <ScalarProperty Name="usr_name" ColumnName="usr_name" />
+                <ScalarProperty Name="usr_password" ColumnName="usr_password" />
+                <ScalarProperty Name="usr_mail" ColumnName="usr_mail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="ORDERITEM" TypeName="shopModel.ORDERITEM" StoreEntitySet="ORDERITEM">
+            <EndProperty Name="ITEM">
+              <ScalarProperty Name="item_id" ColumnName="item_id" />
+            </EndProperty>
+            <EndProperty Name="USERORDER">
+              <ScalarProperty Name="order_id" ColumnName="order_id" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
